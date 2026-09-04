@@ -30,5 +30,5 @@ print("Username:", username)
 print("Age:", age)
 print("Content Category:", category)
 
-if age>40 and category == "fun":
+if age>40 and category == "Fun":
     print("You are old what is fun for you??")
