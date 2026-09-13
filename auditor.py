@@ -13,11 +13,8 @@ while True:
         print("Exiting the program.")
         break
 
-    if not stock.isnumeric():
+    if not stock.isnumeric() or int(stock) < 0:
         print("Invalid input. Please enter a numeric value.")
-        invalid_input += 1
-    elif int(stock) < 0:
-        print("Invalid input. Please enter a non-negative value.")
         invalid_input += 1
     
     else:
