@@ -1,12 +1,9 @@
 def load_inventory():
     with open ("inventory.txt", "r") as file:
         content = file.readlines()
-        inventory = int(content[-1].strip())
+        inventory = int(content[-1])
         return inventory
     
-def save_inventory(inventory):
-    with open("inventory.txt", "w") as file:
-        file.write(str(inventory))
 
 def get_valid_input(stock):
 
@@ -17,9 +14,10 @@ def get_valid_input(stock):
         generate_report(inventory, invalid_input)
         return stock
 
-def process_delivery(current_value, new_value):
+def process_delivery(current_value, new_value, previous_transactions):
     current_value += new_value
-    return current_value
+    previous_transactions.append(new_value)
+    return current_value, previous_transactions
 
 def calculate_tax(amount):
     tax_rate = 0.10
@@ -33,7 +31,7 @@ def generate_report(inventory, invalid_input):
 
 invalid_input = 0
 inventory = load_inventory()
-print(inventory)
+previous_transactions = []
 
 while True:
 
@@ -41,8 +39,7 @@ while True:
         print("Overstock detected, cannot add more stocks")
         break
 
-    #stock = input("Enter a stock delivery quantity: ")
-    stock = "quit"
+    stock = input("Enter a stock delivery quantity: ")
 
     if not get_valid_input(stock):
         print("Invalid input. Please enter a numeric value.")
@@ -50,10 +47,9 @@ while True:
     elif stock == "quit":
         break
     else:
-        inventory = process_delivery(inventory, int(stock))
+        inventory, previous_transactions = process_delivery(inventory, int(stock), previous_transactions)
         tax = calculate_tax(stock)
         print("Current stock quantity:", inventory)
         print("Tax amount on current delivery:", tax)
-
 
 #Link to github repo: https://github.com/Keithtyy/INF1102-Lab
