@@ -4,6 +4,11 @@ def load_inventory():
         inventory = int(content[-1])
         return inventory
     
+def save_inventory(inventory, previous_transactions):
+    with open("inventory.txt", "w") as file:
+        file.write(f"All transactions this session: {previous_transactions} \n")
+        file.write(f"Total inventory currently:\n")
+        file.write(str(inventory))
 
 def get_valid_input(stock):
 
@@ -45,6 +50,7 @@ while True:
         print("Invalid input. Please enter a numeric value.")
         invalid_input += 1
     elif stock == "quit":
+        save_inventory(inventory, previous_transactions)
         break
     else:
         inventory, previous_transactions = process_delivery(inventory, int(stock), previous_transactions)
