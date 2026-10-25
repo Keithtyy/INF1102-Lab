@@ -32,39 +32,50 @@ class Product:
         f"Product Stock: {self.__stock}\n"
         )
 
+class FileManager:
+
+    def __init__(self, filename = "inventory.json"):
+        self.__filename = filename
+
+    def load_inventory(self):
+        if not os.path.exists(self.__filename):
+            with open(self.__filename, "w") as file:
+                json.dump({}, file, indent=4)
+                data = {}
+        with open(self.__filename, "r") as file:
+            data = json.load(file)
+        return data
+
+    def save_inventory(self, inventory):
+        with open(self.__filename, "w") as file:
+            json.dump(inventory.to_dict(), file, indent=4)
+
+    
+
 class Inventory:
     
     def __init__(self):
         self.__products = {}
 
-    def load_inventory(self):
-        if not os.path.exists("inventory.json"):
-            with open("inventory.json", "w") as file:
-                json.dump({}, file, indent=4)
-                data = {}
-        with open("inventory.json", "r") as file:
-            data = json.load(file)
-            print(data)
-            for product_id, product_info in data.items():
-                product = Product(
-                    product_id,
-                    product_info["name"],
-                    product_info["price"],
-                    product_info["stock"]
-                )
-                self.__products[product_id] = product
-        return data
+    def load_inventory(self, data):
+        for product_id, product_data in data.items():
+            product = Product(
+                product_id,
+                product_data["name"],
+                product_data["price"],
+                product_data["stock"]
+            )
+            self.__products[product_id] = product
 
-    def save_inventory(self):
-        data = {}
+    def to_dict(self):
+        inventory_dict = {}
         for product_id, product in self.__products.items():
-            data[product_id] = {
+            inventory_dict[product_id] = {
                 "name": product.get_product_name(),
                 "price": product.get_product_price(),
                 "stock": product.get_product_stock()
             }
-        with open("inventory.json", "w") as file:
-            json.dump(data, file, indent=4)
+        return inventory_dict
 
     def add_product(self, product):
         self.__products[product.get_product_id()] = product
@@ -91,8 +102,9 @@ class Inventory:
 
 class Menu:
 
-    def __init__(self,inventory):
+    def __init__(self,inventory, file_manager):
         self.__inventory = inventory
+        self.__file_manager = file_manager
 
     def display_menu(self):
         print("-------MENU-------")
@@ -123,16 +135,22 @@ class Menu:
             except ValueError:
                 print("Invalid price/stock quantity. Please enter only numeric values.")
         elif option == "3":
-            product_id = input("Enter Product ID to update stock: ")
-            new_stock = int(input("Enter new stock quantity: "))
-            self.__inventory.update_stock(product_id, new_stock)
+            try:
+                product_id = input("Enter Product ID to update stock: ")
+                new_stock = int(input("Enter new stock quantity: "))
+                self.__inventory.update_stock(product_id, new_stock)
+            except ValueError:
+                print("Invalid stock quantity. Please enter only numeric values.")
         elif option == "4":
-            product_id = input("Enter Product ID to search: ")
-            product = self.__inventory.search_product(product_id)
-            if product:
-                print(product.display_information())
+            try:
+                product_id = input("Enter Product ID to search: ")
+                product = self.__inventory.search_product(product_id)
+                if product:
+                    print(product.display_information())
+            except ValueError:
+                print("Invalid product ID. Please enter a valid product ID.")
         elif option == "5":
-            self.__inventory.save_inventory()
+            self.__file_manager.save_inventory(self.__inventory)
             print("Inventory saved successfully.")
         elif option == "6":
             print("Exiting the program.")
@@ -142,9 +160,11 @@ class Menu:
 
     
 def main():
+    file_manager = FileManager()
+    data = file_manager.load_inventory()
     inventory = Inventory()
-    inventory.load_inventory()
-    menu = Menu(inventory)
+    inventory.load_inventory(data)
+    menu = Menu(inventory, file_manager)
 
     while True:
         menu.display_menu()
