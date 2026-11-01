@@ -43,6 +43,7 @@ class Product(ABC):
         f"Product Name: {self.__name}\n"
         f"Product Price: ${self.__price:.2f}\n"
         f"Product Stock: {self.__stock}\n"
+        f"Product Type: {self.__type}\n"
         f"Product Size: {self.__size}\n"
         )
 
@@ -85,6 +86,18 @@ class DigitalProduct(Product):
             super().display_information() +
             f"Product Size: {self.__size:.2f} MB\n"
         )
+
+class SubscriptionProduct(Product):
+
+    def __init__(self, product_id, name, price, stock, type, size):
+        super().__init__(product_id, name, price, stock, type, size)
+        self.__size = size
+
+    def get_fulfillment_info(self):
+        return f"Product is a subscription service."
+
+    def display_information(self):
+        return super().display_information()
 
 class FileManager:
 
@@ -201,11 +214,14 @@ class Menu:
                 product_price = float(input("Product Price: "))
                 product_stock = int(input("Product Stock: "))
                 if product_type == "physical":
-                    product_weight = float(input("Product Weight: "))
-                    product = PhysicalProduct(product_id, product_name, product_price, product_stock, product_type, product_weight) 
-                else:
+                    product_size = float(input("Product Weight: "))
+                    product = PhysicalProduct(product_id, product_name, product_price, product_stock, product_type, product_size) 
+                elif product_type == "digital":
                     product_size = float(input("Product Size: "))
                     product = DigitalProduct(product_id, product_name, product_price, product_stock, product_type, product_size)
+                else:
+                    product_size = "No size"
+                    product = SubscriptionProduct(product_id, product_name, product_price, product_stock, product_type, product_size)
                 self.__inventory.add_product(product)
                 print(f"Product added: {product_name}")
             except ValueError:
