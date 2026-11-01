@@ -135,7 +135,7 @@ class Inventory:
                     product_data["type"],
                     product_data["size"]
                 )
-            else:
+            elif product_data["type"] == "digital":
                 product = DigitalProduct(
                     product_id,
                     product_data["name"],
@@ -144,7 +144,15 @@ class Inventory:
                     product_data["type"],
                     product_data["size"]
                 )
-
+            else:
+                product = SubscriptionProduct(
+                    product_id,
+                    product_data["name"],
+                    product_data["price"],
+                    product_data["stock"],
+                    product_data["type"],
+                    product_data["size"]
+                )
             self.__products[product_id] = product
 
     def to_dict(self):
