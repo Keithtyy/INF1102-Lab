@@ -1,13 +1,19 @@
 import json
 import os
+from abc import ABC, abstractmethod
 
-class Product:
+class Product(ABC):
 
-    def __init__(self, product_id, name, price, stock):
+    def __init__(self, product_id, name, price, stock, type):
         self.__product_id = product_id
         self.__name = name
         self.__price = price
         self.__stock = stock
+        self.__type = type
+
+    @abstractmethod
+    def get_fulfillment_info(self):
+        pass
 
     def get_product_id(self):
         return self.__product_id
@@ -21,6 +27,9 @@ class Product:
     def get_product_stock(self):
         return self.__stock
 
+    def get_product_type(self):
+        return self.__type
+    
     def update_stock(self, quantity):
         self.__stock = quantity
 
@@ -30,6 +39,52 @@ class Product:
         f"Product Name: {self.__name}\n"
         f"Product Price: ${self.__price:.2f}\n"
         f"Product Stock: {self.__stock}\n"
+        )
+
+class CanBeShipped(ABC):
+
+    @abstractmethod
+    def calculate_shipping_cost(self):
+        pass
+
+
+class PhysicalProduct(Product, CanBeShipped):
+
+    def __init__(self, product_id, name, price, stock, type, weight):
+        super().__init__(product_id, name, price, stock, type)
+        self.__weight = weight
+
+    def get_fulfillment_info(self):
+        return f"Product requires physical shipping."
+
+    def calculate_shipping_cost(self):
+        return self.__weight * 5.0
+
+    def get_product_weight(self):
+        return self.__weight
+
+    def display_information(self):
+        return (
+            super().display_information() +
+            f"Product Weight: {self.__weight} kg\n"
+        )
+
+class DigitalProduct(Product):
+
+    def __init__(self, product_id, name, price, stock, type, download_size):
+        super().__init__(product_id, name, price, stock, type)
+        self.__download_size = download_size
+
+    def get_fulfillment_info(self):
+        return f"Product is delivered digitally."
+
+    def get_product_download_size(self):
+        return self.__download_size
+
+    def display_information(self):
+        return (
+            super().display_information() +
+            f"Product Download Size: {self.__download_size:.2f} MB\n"
         )
 
 class FileManager:
@@ -63,7 +118,9 @@ class Inventory:
                 product_id,
                 product_data["name"],
                 product_data["price"],
-                product_data["stock"]
+                product_data["stock"],
+                product_data["type"],
+                product_data["size"]
             )
             self.__products[product_id] = product
 
@@ -73,7 +130,9 @@ class Inventory:
             inventory_dict[product_id] = {
                 "name": product.get_product_name(),
                 "price": product.get_product_price(),
-                "stock": product.get_product_stock()
+                "stock": product.get_product_stock(),
+                "type": product.get_product_type(),
+                "size": product.get_product_size()
             }
         return inventory_dict
 
@@ -124,12 +183,19 @@ class Menu:
         if option == "1":
             self.__inventory.display_inventory()
         elif option == "2":
+
             try:
+                product_type = input("Enter Product Type (physical/digital): ").strip().lower()
                 product_id = input("Product ID: ")
                 product_name = input("Product Name: ")
                 product_price = float(input("Product Price: "))
                 product_stock = int(input("Product Stock: "))
-                product = Product(product_id, product_name, product_price, product_stock)
+                if product_type == "physical":
+                    product_weight = float(input("Product Weight: "))
+                    product = PhysicalProduct(product_id, product_name, product_price, product_stock, product_type, product_weight) 
+                else:
+                    product_size = float(input("Product Size: "))
+                    product = DigitalProduct(product_id, product_name, product_price, product_stock, product_type, product_size)
                 self.__inventory.add_product(product)
                 print(f"Product added: {product_name}")
             except ValueError:
