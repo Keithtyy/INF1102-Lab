@@ -4,12 +4,13 @@ from abc import ABC, abstractmethod
 
 class Product(ABC):
 
-    def __init__(self, product_id, name, price, stock, type):
+    def __init__(self, product_id, name, price, stock, type, size):
         self.__product_id = product_id
         self.__name = name
         self.__price = price
         self.__stock = stock
         self.__type = type
+        self.__size = size
 
     @abstractmethod
     def get_fulfillment_info(self):
@@ -29,6 +30,9 @@ class Product(ABC):
 
     def get_product_type(self):
         return self.__type
+
+    def get_product_size(self):
+        return self.__size
     
     def update_stock(self, quantity):
         self.__stock = quantity
@@ -39,6 +43,7 @@ class Product(ABC):
         f"Product Name: {self.__name}\n"
         f"Product Price: ${self.__price:.2f}\n"
         f"Product Stock: {self.__stock}\n"
+        f"Product Size: {self.__size}\n"
         )
 
 class CanBeShipped(ABC):
@@ -50,41 +55,35 @@ class CanBeShipped(ABC):
 
 class PhysicalProduct(Product, CanBeShipped):
 
-    def __init__(self, product_id, name, price, stock, type, weight):
-        super().__init__(product_id, name, price, stock, type)
-        self.__weight = weight
+    def __init__(self, product_id, name, price, stock, type, size):
+        super().__init__(product_id, name, price, stock, type, size)
+        self.__size = size
 
     def get_fulfillment_info(self):
         return f"Product requires physical shipping."
 
     def calculate_shipping_cost(self):
-        return self.__weight * 5.0
-
-    def get_product_weight(self):
-        return self.__weight
+        return self.__size * 5.0
 
     def display_information(self):
         return (
             super().display_information() +
-            f"Product Weight: {self.__weight} kg\n"
+            f"Product Size: {self.__size:.2f} kg\n"
         )
 
 class DigitalProduct(Product):
 
-    def __init__(self, product_id, name, price, stock, type, download_size):
-        super().__init__(product_id, name, price, stock, type)
-        self.__download_size = download_size
+    def __init__(self, product_id, name, price, stock, type, size):
+        super().__init__(product_id, name, price, stock, type, size)
+        self.__size = size
 
     def get_fulfillment_info(self):
         return f"Product is delivered digitally."
 
-    def get_product_download_size(self):
-        return self.__download_size
-
     def display_information(self):
         return (
             super().display_information() +
-            f"Product Download Size: {self.__download_size:.2f} MB\n"
+            f"Product Size: {self.__size:.2f} MB\n"
         )
 
 class FileManager:
@@ -114,14 +113,25 @@ class Inventory:
 
     def load_inventory(self, data):
         for product_id, product_data in data.items():
-            product = Product(
-                product_id,
-                product_data["name"],
-                product_data["price"],
-                product_data["stock"],
-                product_data["type"],
-                product_data["size"]
-            )
+            if product_data["type"] == "physical":
+                product = PhysicalProduct(
+                    product_id,
+                    product_data["name"],
+                    product_data["price"],
+                    product_data["stock"],
+                    product_data["type"],
+                    product_data["size"]
+                )
+            else:
+                product = DigitalProduct(
+                    product_id,
+                    product_data["name"],
+                    product_data["price"],
+                    product_data["stock"],
+                    product_data["type"],
+                    product_data["size"]
+                )
+                
             self.__products[product_id] = product
 
     def to_dict(self):
