@@ -131,7 +131,7 @@ class Inventory:
                     product_data["type"],
                     product_data["size"]
                 )
-                
+
             self.__products[product_id] = product
 
     def to_dict(self):
@@ -229,6 +229,9 @@ class Menu:
             self.__file_manager.save_inventory(self.__inventory)
             print("Inventory saved successfully.")
         elif option == "6":
+            self.__file_manager.save_inventory(self.__inventory)
+            print("Saving... before exiting.")
+            print("Inventory saved successfully.")
             print("Exiting the program.")
             exit()
         else:
