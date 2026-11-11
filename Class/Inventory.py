@@ -2,6 +2,7 @@ from Class.Product import Product
 from Class.PhysicalProduct import PhysicalProduct
 from Class.DigitalProduct import DigitalProduct
 from Class.SubscriptionProduct import SubscriptionProduct
+from Class.Supplier import Supplier
 
 class Inventory:
     
@@ -10,8 +11,15 @@ class Inventory:
 
     def load_inventory(self, data: dict) -> None:
         for product_id, product_data in data.items():
+            supplier_data = product_data["supplier"]
+            supplier = Supplier(
+                supplier_data["supplier_id"],
+                supplier_data["name"],
+                supplier_data["contact_email"]
+            )
             if product_data["type"] == "physical":
                 product = PhysicalProduct(
+                    supplier,
                     product_id,
                     product_data["name"],
                     product_data["price"],
@@ -21,6 +29,7 @@ class Inventory:
                 )
             elif product_data["type"] == "digital":
                 product = DigitalProduct(
+                    supplier,
                     product_id,
                     product_data["name"],
                     product_data["price"],
@@ -30,6 +39,7 @@ class Inventory:
                 )
             else:
                 product = SubscriptionProduct(
+                    supplier,
                     product_id,
                     product_data["name"],
                     product_data["price"],
@@ -42,12 +52,18 @@ class Inventory:
     def to_dict(self) -> dict:
         inventory_dict = {}
         for product_id, product in self.__products.items():
+            supplier = product.get_supplier()
             inventory_dict[product_id] = {
                 "name": product.get_product_name(),
                 "price": product.get_product_price(),
                 "stock": product.get_product_stock(),
                 "type": product.get_product_type(),
-                "size": product.get_product_size()
+                "size": product.get_product_size(),
+                "supplier": {
+                    "supplier_id": supplier.get_supplier_id(),
+                    "name": supplier.get_name(),
+                    "contact_email": supplier.get_contact_email()
+                }
             }
         return inventory_dict
 
@@ -78,4 +94,4 @@ class Inventory:
             print("Inventory is empty.")
         else:
             for product in self.__products.values():
-                print(product.display_information())
+                print(product.display_information() + product.get_supplier().display_information() + "\n")

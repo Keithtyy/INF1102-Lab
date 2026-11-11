@@ -1,6 +1,7 @@
 from Class.PhysicalProduct import PhysicalProduct
 from Class.DigitalProduct import DigitalProduct
 from Class.SubscriptionProduct import SubscriptionProduct
+from Class.Supplier import Supplier
 from Class.Inventory import Inventory
 from Class.FileManager import FileManager
 
@@ -31,20 +32,26 @@ class Menu:
         elif option == "2":
 
             try:
-                product_type = input("Enter Product Type (physical/digital): ").strip().lower()
+                product_type = input("Enter Product Type (physical/digital/subscription): ").strip().lower()
                 product_id = input("Product ID: ")
                 product_name = input("Product Name: ")
                 product_price = float(input("Product Price: "))
                 product_stock = int(input("Product Stock: "))
+
+                supplier_id = input("Supplier ID: ")
+                supplier_name = input("Supplier Name: ")
+                supplier_email = input("Supplier Contact Email: ")
+                supplier = Supplier(supplier_id, supplier_name, supplier_email)
+
                 if product_type == "physical":
                     product_size = float(input("Product Weight: "))
-                    product = PhysicalProduct(product_id, product_name, product_price, product_stock, product_type, product_size) 
+                    product = PhysicalProduct(supplier, product_id, product_name, product_price, product_stock, product_type, product_size) 
                 elif product_type == "digital":
                     product_size = float(input("Product Size: "))
-                    product = DigitalProduct(product_id, product_name, product_price, product_stock, product_type, product_size)
+                    product = DigitalProduct(supplier, product_id, product_name, product_price, product_stock, product_type, product_size)
                 else:
                     product_size = "No size"
-                    product = SubscriptionProduct(product_id, product_name, product_price, product_stock, product_type, product_size)
+                    product = SubscriptionProduct(supplier, product_id, product_name, product_price, product_stock, product_type, product_size)
                 self.__inventory.add_product(product)
                 print(f"Product added: {product_name}")
             except ValueError:
@@ -61,7 +68,7 @@ class Menu:
                 product_id = input("Enter Product ID to search: ")
                 product = self.__inventory.search_product(product_id)
                 if product:
-                    print(product.display_information())
+                    print(product.display_information() + product.get_supplier().display_information())
             except ValueError:
                 print("Invalid product ID. Please enter a valid product ID.")
         elif option == "5":
