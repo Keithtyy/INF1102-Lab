@@ -94,4 +94,8 @@ class Inventory:
             print("Inventory is empty.")
         else:
             for product in self.__products.values():
-                print(product.display_information() + product.get_supplier().display_information() + "\n")
+                print(
+                    product.display_information() +
+                    f"Fulfillment Info: {product.get_fulfillment_info()}\n" +
+                    product.get_supplier().display_information() + "\n"
+                )
