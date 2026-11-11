@@ -3,7 +3,7 @@ from Class.Supplier import Supplier
 
 class DigitalProduct(Product):
 
-    def __init__(self, supplier: Supplier, product_id: int, name: str, price: float, stock: int, type: str, size: float):
+    def __init__(self, supplier: Supplier, product_id: str, name: str, price: float, stock: int, type: str, size: float):
         super().__init__(supplier, product_id, name, price, stock, type)
         self.__size = size
 

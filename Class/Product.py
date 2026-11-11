@@ -4,7 +4,7 @@ from Class.Supplier import Supplier
 
 class Product(ABC):
 
-    def __init__(self, supplier: Supplier, product_id: int, name: str, price: float, stock: int, type: str):
+    def __init__(self, supplier: Supplier, product_id: str, name: str, price: float, stock: int, type: str):
         self.__supplier = supplier
         self.__product_id = product_id
         self.__name = name

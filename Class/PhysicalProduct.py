@@ -4,7 +4,7 @@ from Class.Supplier import Supplier
 
 class PhysicalProduct(Product, CanBeShipped):
 
-    def __init__(self, supplier: Supplier, product_id: int, name: str, price: float, stock: int, type: str, size: str):
+    def __init__(self, supplier: Supplier, product_id: str, name: str, price: float, stock: int, type: str, size: str):
         super().__init__(supplier, product_id, name, price, stock, type)
         self.__size = size
 
