@@ -1,19 +1,23 @@
 from abc import ABC, abstractmethod
+from Class.Supplier import Supplier
 
 
 class Product(ABC):
 
-    def __init__(self, product_id, name, price, stock, type, size):
+    def __init__(self, supplier: Supplier, product_id: int, name: str, price: float, stock: int, type: str):
+        self.__supplier = supplier
         self.__product_id = product_id
         self.__name = name
         self.__price = price
         self.__stock = stock
         self.__type = type
-        self.__size = size
 
     @abstractmethod
     def get_fulfillment_info(self):
         pass
+
+    def get_supplier(self):
+        return self.__supplier
 
     def get_product_id(self):
         return self.__product_id
@@ -29,9 +33,6 @@ class Product(ABC):
 
     def get_product_type(self):
         return self.__type
-
-    def get_product_size(self):
-        return self.__size
     
     def update_stock(self, quantity):
         self.__stock = quantity
@@ -43,5 +44,4 @@ class Product(ABC):
         f"Product Price: ${self.__price:.2f}\n"
         f"Product Stock: {self.__stock}\n"
         f"Product Type: {self.__type}\n"
-        f"Product Size: {self.__size}\n"
         )
