@@ -1,13 +1,14 @@
+from Class.Product import Product
 from Class.PhysicalProduct import PhysicalProduct
 from Class.DigitalProduct import DigitalProduct
 from Class.SubscriptionProduct import SubscriptionProduct
 
 class Inventory:
     
-    def __init__(self):
+    def __init__(self) -> None:
         self.__products = {}
 
-    def load_inventory(self, data):
+    def load_inventory(self, data: dict) -> None:
         for product_id, product_data in data.items():
             if product_data["type"] == "physical":
                 product = PhysicalProduct(
@@ -38,7 +39,7 @@ class Inventory:
                 )
             self.__products[product_id] = product
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         inventory_dict = {}
         for product_id, product in self.__products.items():
             inventory_dict[product_id] = {
@@ -50,29 +51,29 @@ class Inventory:
             }
         return inventory_dict
 
-    def add_product(self, product):
+    def add_product(self, product: Product) -> None:
         self.__products[product.get_product_id()] = product
 
-    def remove_product(self, product_id):
+    def remove_product(self, product_id: str) -> None:
         if product_id in self.__products:
             del self.__products[product_id]
         else:
             print("Product not found.")
 
-    def update_stock(self, product_id, quantity):
+    def update_stock(self, product_id: str, quantity: int) -> None:
         if product_id in self.__products:
             self.__products[product_id].update_stock(quantity)
         else:
             print("Product not found.")
 
-    def search_product(self, product_id):
+    def search_product(self, product_id: str) -> Product | None:
         if product_id in self.__products:
             return self.__products[product_id]
         else:
             print("Product not found.")
             return None
 
-    def display_inventory(self):
+    def display_inventory(self) -> None:
         if not self.__products:
             print("Inventory is empty.")
         else:

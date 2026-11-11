@@ -1,14 +1,16 @@
 from Class.PhysicalProduct import PhysicalProduct
 from Class.DigitalProduct import DigitalProduct
 from Class.SubscriptionProduct import SubscriptionProduct
+from Class.Inventory import Inventory
+from Class.FileManager import FileManager
 
 class Menu:
 
-    def __init__(self,inventory, file_manager):
+    def __init__(self, inventory: Inventory, file_manager: FileManager) -> None:
         self.__inventory = inventory
         self.__file_manager = file_manager
 
-    def display_menu(self):
+    def display_menu(self) -> None:
         print("-------MENU-------")
         print("1. Display Inventory")
         print("2. Add Product")
@@ -19,11 +21,11 @@ class Menu:
         print("7. Exit")
         print("------------------")
 
-    def get_user_input(self):
+    def get_user_input(self) -> str:
         user_input = input("Enter Option: ")
         return user_input
 
-    def process_user_input(self, option):
+    def process_user_input(self, option: str) -> None:
         if option == "1":
             self.__inventory.display_inventory()
         elif option == "2":
