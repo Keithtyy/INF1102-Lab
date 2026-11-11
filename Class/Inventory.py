@@ -53,6 +53,12 @@ class Inventory:
     def add_product(self, product):
         self.__products[product.get_product_id()] = product
 
+    def remove_product(self, product_id):
+        if product_id in self.__products:
+            del self.__products[product_id]
+        else:
+            print("Product not found.")
+
     def update_stock(self, product_id, quantity):
         if product_id in self.__products:
             self.__products[product_id].update_stock(quantity)

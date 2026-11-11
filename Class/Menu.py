@@ -14,8 +14,9 @@ class Menu:
         print("2. Add Product")
         print("3. Update Stock")
         print("4. Search Product")
-        print("5. Save Inventory")
-        print("6. Exit")
+        print("5. Remove Product")
+        print("6. Save Inventory")
+        print("7. Exit")
         print("------------------")
 
     def get_user_input(self):
@@ -62,9 +63,15 @@ class Menu:
             except ValueError:
                 print("Invalid product ID. Please enter a valid product ID.")
         elif option == "5":
+            try:
+                product_id = input("Enter Product ID to remove: ")
+                self.__inventory.remove_product(product_id)
+            except ValueError:
+                print("Invalid product ID. Please enter a valid product ID.")
+        elif option == "6":
             self.__file_manager.save_inventory(self.__inventory)
             print("Inventory saved successfully.")
-        elif option == "6":
+        elif option == "7":
             self.__file_manager.save_inventory(self.__inventory)
             print("Saving... before exiting.")
             print("Inventory saved successfully.")
