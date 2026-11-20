@@ -1,4 +1,4 @@
-from discount_strategy import DiscountStrategy
+from Class.discount_strategy import DiscountStrategy
 
 class BulkDiscount(DiscountStrategy):
     def __init__(self, threshold: float, discount: float):
