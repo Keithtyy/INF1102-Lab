@@ -1,13 +1,12 @@
+from Class.product_factory import ProductFactory
 from Class.product import Product
-from Class.physical_product import PhysicalProduct
-from Class.digital_product import DigitalProduct
-from Class.subscription_product import SubscriptionProduct
 from Class.supplier import Supplier
 
 class Inventory:
     
     def __init__(self) -> None:
         self.__products = {}
+        self.__product_factory = ProductFactory()
 
     def load_inventory(self, data: dict) -> None:
         for product_id, product_data in data.items():
@@ -17,36 +16,13 @@ class Inventory:
                 supplier_data["name"],
                 supplier_data["contact_email"]
             )
-            if product_data["type"] == "physical":
-                product = PhysicalProduct(
-                    supplier,
-                    product_id,
-                    product_data["name"],
-                    product_data["price"],
-                    product_data["stock"],
-                    product_data["type"],
-                    product_data["size"]
-                )
-            elif product_data["type"] == "digital":
-                product = DigitalProduct(
-                    supplier,
-                    product_id,
-                    product_data["name"],
-                    product_data["price"],
-                    product_data["stock"],
-                    product_data["type"],
-                    product_data["size"]
-                )
-            else:
-                product = SubscriptionProduct(
-                    supplier,
-                    product_id,
-                    product_data["name"],
-                    product_data["price"],
-                    product_data["stock"],
-                    product_data["type"],
-                    product_data["size"]
-                )
+            product_type = product_data["type"]
+            product_name = product_data["name"]
+            product_price = product_data["price"]
+            product_stock = product_data["stock"]
+            product_size = product_data["size"]
+
+            product = self.__product_factory.create(product_type, supplier, product_id, product_name, product_price, product_stock, product_size)
             self.__products[product_id] = product
 
     def to_dict(self) -> dict:
