@@ -1,14 +1,13 @@
-from Class.physical_product import PhysicalProduct
-from Class.digital_product import DigitalProduct
-from Class.subscription_product import SubscriptionProduct
 from Class.supplier import Supplier
 from Class.inventory import Inventory
 from Class.file_manager import FileManager
+from Class.product_factory import ProductFactory
 
 class Menu:
 
     def __init__(self, inventory: Inventory, file_manager: FileManager) -> None:
         self.__inventory = inventory
+        self.__product_factory = ProductFactory()
         self.__file_manager = file_manager
 
     def display_menu(self) -> None:
@@ -37,25 +36,19 @@ class Menu:
                 product_name = input("Product Name: ")
                 product_price = float(input("Product Price: "))
                 product_stock = int(input("Product Stock: "))
+                product_size = float(input("Product Size (weight in kg for physical, file size in MB for digital, or leave blank for subscription): ") or 0)
 
                 supplier_id = input("Supplier ID: ")
                 supplier_name = input("Supplier Name: ")
                 supplier_email = input("Supplier Contact Email: ")
                 supplier = Supplier(supplier_id, supplier_name, supplier_email)
 
-                if product_type == "physical":
-                    product_size = float(input("Product Weight: "))
-                    product = PhysicalProduct(supplier, product_id, product_name, product_price, product_stock, product_type, product_size) 
-                elif product_type == "digital":
-                    product_size = float(input("Product Size: "))
-                    product = DigitalProduct(supplier, product_id, product_name, product_price, product_stock, product_type, product_size)
-                else:
-                    product_size = "No size"
-                    product = SubscriptionProduct(supplier, product_id, product_name, product_price, product_stock, product_type, product_size)
+                product = self.__product_factory.create(product_type, supplier, product_id, product_name, product_price, product_stock, product_size)
                 self.__inventory.add_product(product)
                 print(f"Product added: {product_name}")
-            except ValueError:
-                print("Invalid price/stock quantity. Please enter only numeric values.")
+            except ValueError as e:
+                print(f"Invalid input: {e}")
+
         elif option == "3":
             try:
                 product_id = input("Enter Product ID to update stock: ")

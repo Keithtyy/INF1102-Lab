@@ -1,6 +1,6 @@
-from Class.FileManager import FileManager
-from Class.Inventory import Inventory
-from Class.Menu import Menu
+from Class.file_manager import FileManager
+from Class.inventory import Inventory
+from Class.menu import Menu
     
 def main():
     file_manager = FileManager()

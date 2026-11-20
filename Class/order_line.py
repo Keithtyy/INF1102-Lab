@@ -1,4 +1,3 @@
-
 from Class.product import Product
 
 class OrderLine:
