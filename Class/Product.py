@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from Class.Supplier import Supplier
+from Class.supplier import Supplier
 
 
 class Product(ABC):

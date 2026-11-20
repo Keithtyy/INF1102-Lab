@@ -1,6 +1,6 @@
 import os
 import json
-from Class.Inventory import Inventory
+from Class.inventory import Inventory
 
 class FileManager:
 

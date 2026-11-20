@@ -1,5 +1,5 @@
 
-from Class.Product import Product
+from Class.product import Product
 
 class OrderLine:
 

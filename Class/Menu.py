@@ -1,9 +1,9 @@
-from Class.PhysicalProduct import PhysicalProduct
-from Class.DigitalProduct import DigitalProduct
-from Class.SubscriptionProduct import SubscriptionProduct
-from Class.Supplier import Supplier
-from Class.Inventory import Inventory
-from Class.FileManager import FileManager
+from Class.physical_product import PhysicalProduct
+from Class.digital_product import DigitalProduct
+from Class.subscription_product import SubscriptionProduct
+from Class.supplier import Supplier
+from Class.inventory import Inventory
+from Class.file_manager import FileManager
 
 class Menu:
 

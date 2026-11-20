@@ -1,5 +1,5 @@
-from Class.OrderLine import OrderLine
-from Class.Product import Product
+from Class.order_line import OrderLine
+from Class.product import Product
 from Class.discount_strategy import DiscountStrategy
 from Class.no_discount import NoDiscount
 

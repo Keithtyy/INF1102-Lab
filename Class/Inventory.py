@@ -1,8 +1,8 @@
-from Class.Product import Product
-from Class.PhysicalProduct import PhysicalProduct
-from Class.DigitalProduct import DigitalProduct
-from Class.SubscriptionProduct import SubscriptionProduct
-from Class.Supplier import Supplier
+from Class.product import Product
+from Class.physical_product import PhysicalProduct
+from Class.digital_product import DigitalProduct
+from Class.subscription_product import SubscriptionProduct
+from Class.supplier import Supplier
 
 class Inventory:
     

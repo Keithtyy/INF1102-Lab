@@ -1,5 +1,5 @@
-from Class.Product import Product
-from Class.Supplier import Supplier
+from Class.product import Product
+from Class.supplier import Supplier
 
 class SubscriptionProduct(Product):
 
