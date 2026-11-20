@@ -6,7 +6,6 @@ class Inventory:
     
     def __init__(self) -> None:
         self.__products = {}
-        self.__product_factory = ProductFactory()
 
     def load_inventory(self, data: dict) -> None:
         for product_id, product_data in data.items():
@@ -22,7 +21,7 @@ class Inventory:
             product_stock = product_data["stock"]
             product_size = product_data["size"]
 
-            product = self.__product_factory.create(product_type, supplier, product_id, product_name, product_price, product_stock, product_size)
+            product = ProductFactory.create(product_type, supplier, product_id, product_name, product_price, product_stock, product_size)
             self.__products[product_id] = product
 
     def to_dict(self) -> dict:

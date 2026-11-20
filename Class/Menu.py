@@ -7,7 +7,6 @@ class Menu:
 
     def __init__(self, inventory: Inventory, file_manager: FileManager) -> None:
         self.__inventory = inventory
-        self.__product_factory = ProductFactory()
         self.__file_manager = file_manager
 
     def display_menu(self) -> None:
@@ -25,6 +24,26 @@ class Menu:
         user_input = input("Enter Option: ")
         return user_input
 
+    def get_positive_integer_input(self, prompt: str) -> int:
+        while True:
+            try:
+                value = int(input(prompt))
+                if value < 0:
+                    raise ValueError("Please enter a positive integer.")
+                return value
+            except ValueError as e:
+                print(f"Invalid input: {e}")
+
+    def get_positive_float_input(self, prompt: str) -> float:
+        while True:
+            try:
+                value = float(input(prompt))
+                if value < 0:
+                    raise ValueError("Please enter a positive float.")
+                return value
+            except ValueError as e:
+                print(f"Invalid input: {e}")
+
     def process_user_input(self, option: str) -> None:
         if option == "1":
             self.__inventory.display_inventory()
@@ -34,16 +53,16 @@ class Menu:
                 product_type = input("Enter Product Type (physical/digital/subscription): ").strip().lower()
                 product_id = input("Product ID: ")
                 product_name = input("Product Name: ")
-                product_price = float(input("Product Price: "))
-                product_stock = int(input("Product Stock: "))
-                product_size = float(input("Product Size (weight in kg for physical, file size in MB for digital, or leave blank for subscription): ") or 0)
+                product_price = self.get_positive_float_input("Product Price: ")
+                product_stock = self.get_positive_integer_input("Product Stock: ")
+                product_size = self.get_positive_float_input("Product Size (weight in kg for physical, file size in MB for digital, or leave blank for subscription): ")
 
                 supplier_id = input("Supplier ID: ")
                 supplier_name = input("Supplier Name: ")
                 supplier_email = input("Supplier Contact Email: ")
                 supplier = Supplier(supplier_id, supplier_name, supplier_email)
 
-                product = self.__product_factory.create(product_type, supplier, product_id, product_name, product_price, product_stock, product_size)
+                product = ProductFactory.create(product_type, supplier, product_id, product_name, product_price, product_stock, product_size)
                 self.__inventory.add_product(product)
                 print(f"Product added: {product_name}")
             except ValueError as e:
